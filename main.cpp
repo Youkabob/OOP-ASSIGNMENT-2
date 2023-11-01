@@ -13,4 +13,6 @@ cout<<num1<<"\n";
 cin>>s2;
     BigReal num2(s2);
     cout<<num2<<"\n";
+
+
 }
