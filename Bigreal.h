@@ -11,34 +11,24 @@
 using namespace std;
 
 class BigReal{
-    friend ostream& operator << (ostream& out,const BigReal& num);
+    friend ostream& operator<<(ostream& out,const BigReal& bigint);
 public:
-    BigReal(const BigReal &&other);
-    BigReal (string realNumber);
-    BigReal (double realNumber = 0.0);
-    BigReal (const string &realNumber);
-    BigReal (const BigReal& other);
-    int size()const;
-    char Sign()const;
+    BigReal (double realNumber=0.0); // Default constructor
+    BigReal (string realNumber); // Initialize from string
+    BigReal (const BigReal &other);//copy constructor
+    BigReal& operator= (const BigReal &num);// Assignment operator
 
-    //    BigReal (const BigReal& other);
-//    BigReal& operator= (const BigReal& other);
-//    BigReal (const BigReal&& other);
-//    BigReal& operator= (const BigReal&& other);
-//
-//
-    BigReal operator+ (const BigReal& other)const;
-//
-//    int size()const;
-//    char sign()const;
+    char getSign() const;
+    void setSign(char Sign);
+    int size() const;
 
 private:
-    string number,
-    whole="";
+    string number;
+   deque<char> whole;
     string fraction="";
     char sign;  // to store the sign
-    void setFraction(const string &number);
-    void setWhole(const string &number);
+    bool isValidReal (); // True if correct real
+    static void matchSize(BigReal& LHS,BigReal& RHS);
 };
 
 #endif //A2_TASK2_S6_20221025_BIGREAL_H
