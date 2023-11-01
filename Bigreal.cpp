@@ -105,8 +105,47 @@ BigReal& BigReal::operator=(const BigReal &num) {// Assignment operator
 char BigReal::getSign() const {
     return  sign;
 }
-
-
+bool BigReal::operator<(BigReal rhs) {
+    if ( sign == '+' && rhs.sign == '-' )
+        return false ;
+    if ( sign == '-' && rhs.sign == '+' )
+        return true ;
+    if ( sign == '+' && rhs.sign == '+' )
+        return (( rhs.whole + '.' + rhs.fraction ) > ( whole + '.' + fraction )) ;
+    else if ( sign == '-' && rhs.sign == '-' )
+        return (( rhs.whole + '.' + rhs.fraction ) < ( whole + '.' + fraction )) ;
+}
+**********************************************************************************************************
+bool BigReal::operator>(BigReal rhs) {
+    if ( sign == '+' && rhs.sign == '-' )
+        return true ;
+    if ( sign == '-' && rhs.sign == '+' )
+        return false;
+    if ( sign == '+' && rhs.sign == '+' )
+        return (( rhs.whole + '.' + rhs.fraction ) < ( whole + '.' + fraction )) ;
+    else if ( sign == '-' && rhs.sign == '-' )
+        return (( rhs.whole + '.' + rhs.fraction ) > ( whole + '.' + fraction )) ;
+}
+***********************************************************************************************************
+bool BigReal::operator==(BigReal anotherReal) {
+    if(sign!=anotherReal.sign){
+        return false;
+    }
+    if(sign==anotherReal.sign){
+        if(whole==anotherReal.whole){
+            if(fraction==anotherReal.fraction){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        else{
+            return false;
+        }
+    }
+}
+************************************************************************************************************
 
 ostream& operator<<(ostream &out, BigReal num) {
     // output the sign first
