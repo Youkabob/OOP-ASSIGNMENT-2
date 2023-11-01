@@ -21,7 +21,9 @@ public:
     BigReal &operator=(const BigReal &num);// Assignment operator
 
     BigReal operator+(BigReal &other);
-
+    bool operator< (BigReal anotherReal);
+    bool operator> (BigReal anotherReal);
+    bool operator== (BigReal anotherReal);
     char getSign() const;
 
 
