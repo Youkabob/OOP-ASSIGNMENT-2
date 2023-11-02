@@ -20,10 +20,11 @@ public:
     BigReal(const BigReal &other);//copy constructor
     BigReal &operator=(const BigReal &num);// Assignment operator
 
-    BigReal operator+(BigReal &other);
+    BigReal operator+ (BigReal& other);
     bool operator< (BigReal anotherReal);
     bool operator> (BigReal anotherReal);
     bool operator== (BigReal anotherReal);
+
     char getSign() const;
 
 
@@ -35,9 +36,9 @@ private:
     int Size;
 
     bool isValidReal(string number); // True if correct real
-    static void matchwholeSize(BigReal &LHS, BigReal &RHS);
+    static void matchwholeSize(string &lhs, string &rhs);
 
-    static void matchFractionSize(string &LHS, string &RHS);
+    static void matchFractionSize(string &lhs, string &rhs);
 
     string setFraction(const string &number);
 

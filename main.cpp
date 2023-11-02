@@ -1,33 +1,40 @@
 #include <bits/stdc++.h>
-#include "BigReal.h"
-#include "BigReal.cpp"
+#include "Bigreal.h"
+#include "Bigreal.cpp"
 using namespace std;
 
 int main() {
-    string s1,s2;
-    cout<<"enter the first number: ";
-    cin>>s1;
-    cin>>s2;
-    BigReal num1 (s1);
+    string s1, s2;
+    start:
+
+    cout << "enter the first number: ";
+    cin >> s1;
+    BigReal num1(s1);
+    cout << "\nenter the second number: ";
+    cin >> s2;
     BigReal num2(s2);
+    BigReal num3 = num1 + num2;
+    cout << num3 << "\n";
 
-    if(num1==num2){
-        cout<<"THEY ARE EQUAL"<<endl;
-    }
-    else{
-        cout<<"NO"<<endl;
-    }
-if(num1<num2){
-    cout<<"Num2 is greater";
-}
-else{
-    cout<<"NO"<<endl;
-}
-if(num1>num2){
-    cout<<"Num1 is greater";
-}
-else{
-    cout<<"NO";
-}
+    if (num1 == num2)
+        cout << "num1 = num2\n";
+    else if (num1 > num2)
+        cout << "num1 > num2\n";
+    else
+        cout << "num1 < num2\n";
 
+    // repeat window
+    choose:
+    cout << "do you want to exit ? (y/n) : ";
+    char c;
+    cin >> c;
+
+    if (c == 'y')
+        exit(0);
+    else if (c == 'n')
+        goto start;
+    else {
+        cout << "invalid input please try again!\n";
+        goto choose;
+    }
 }
