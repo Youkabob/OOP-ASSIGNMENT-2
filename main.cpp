@@ -13,8 +13,12 @@ int main() {
     cout << "\nenter the second number: ";
     cin >> s2;
     BigReal num2(s2);
+
+    cout << "num 1 : " << num1 << "\n";
+    cout << "num 2 : " << num2 << "\n";
+
     BigReal num3 = num1 + num2;
-    cout << num3 << "\n";
+    cout << "num 1 + num 2 = " << num3 << '\n';
 
     if (num1 == num2)
         cout << "num1 = num2\n";

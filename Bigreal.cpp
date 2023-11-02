@@ -34,32 +34,31 @@ BigReal::BigReal(double realNumber) {
 
 
 //***************************** assign number *********************************************************
-BigReal ::BigReal(string realNumber){
-    if (isValidReal(realNumber)){
-        whole= setWhole(realNumber);
-        fraction= setFraction(realNumber);
-        sign= setSign(realNumber[0]);
-        Size=realNumber.size()-2;
-    }
-    else{
-        whole="";
-        fraction="";
-        sign='+';
-        Size=0;
-        point=0;
+BigReal ::BigReal(string realNumber) {
+    if (isValidReal(realNumber)) {
+        whole = setWhole(realNumber);
+        fraction = setFraction(realNumber);
+        sign = setSign(realNumber[0]);
+        Size = realNumber.size() - 2;
+    } else {
+        whole = "";
+        fraction = "";
+        sign = '+';
+        Size = 0;
+        point = 0;
     }
 }
 
 //***************************** whole setter *********************************************************
 string BigReal::setWhole(const string &number) {
-    string wholePart ="";
-    for (const char& i : number) {
-        if (i=='-'||i=='+') continue;
-        if(i=='.') {
-           point=1;
+    string wholePart = "";
+    for (const char &i: number) {
+        if (i == '-' || i == '+') continue;
+        if (i == '.') {
+            point = 1;
             break;
         }
-        wholePart+=i;
+        wholePart += i;
     }
     return wholePart;
 }
@@ -152,9 +151,6 @@ BigReal BigReal::operator+ ( BigReal& other) {
 
         result.push_front(sum + '0');
     }
-    if (carry) {
-        result.push_front(carry + '0');
-    }
 
     // Set the fraction part of the result
     for (auto &i : result) {
@@ -200,30 +196,52 @@ BigReal BigReal::operator+ ( BigReal& other) {
     return realnum;
 }
 
+
 // ******************************** "<" Operator *******************************************
-bool BigReal::operator<(BigReal rhs) {
-    if ( sign == '+' && rhs.sign == '-' )
-        return false ;
-    if ( sign == '-' && rhs.sign == '+' )
-        return true ;
-    if ( sign == '+' && rhs.sign == '+' )
-        return (( rhs.whole + '.' + rhs.fraction ) > ( whole + '.' + fraction )) ;
-    else if ( sign == '-' && rhs.sign == '-' )
-        return (( rhs.whole + '.' + rhs.fraction ) < ( whole + '.' + fraction )) ;
+bool BigReal::operator<(const BigReal& anotherReal)const {
+
+    if (this->sign == '-' && anotherReal.sign == '+')
+        return true;
+    // if the first number have a positive sign and the second number have negative sign function will return false
+    if (this->sign == '+' && anotherReal.sign == '-')
+        return false;
+
+
+    string LHSFraction = this->fraction;
+    string RHSFraction = anotherReal.fraction;
+    matchFractionSize(LHSFraction, RHSFraction); // add zeros to the right
+
+    if (this->whole == anotherReal.whole) {
+        if (this->sign == '-')
+            return (LHSFraction > RHSFraction);
+        else
+            return (LHSFraction < RHSFraction);
+    } else {
+        return (this->whole < anotherReal.whole);
+    }
 }
 
 // ******************************** ">" Operator *******************************************
-bool BigReal::operator>(BigReal rhs) {
-    if ( sign == '+' && rhs.sign == '-' )
-        return true ;
-    if ( sign == '-' && rhs.sign == '+' )
+bool BigReal::operator>(const BigReal &anotherReal)const{
+    if(this->sign=='-'&&anotherReal.sign=='+')
         return false;
-    if ( sign == '+' && rhs.sign == '+' )
-        return (( rhs.whole + '.' + rhs.fraction ) < ( whole + '.' + fraction )) ;
-    else if ( sign == '-' && rhs.sign == '-' )
-        return (( rhs.whole + '.' + rhs.fraction ) > ( whole + '.' + fraction )) ;
-}
+    // if the first number have a positive sign and the second number have negative sign function will return false
+    if(this->sign=='+'&&anotherReal.sign=='-')
+        return true;
 
+    string LHSFraction = this->fraction;
+    string RHSFraction = anotherReal.fraction;
+    matchFractionSize(LHSFraction,RHSFraction);
+
+    if(this->whole==anotherReal.whole){
+        if(this->sign=='-')
+            return (LHSFraction < RHSFraction);
+        else
+            return (LHSFraction > RHSFraction);
+    }
+    else
+        return (this->whole>anotherReal.whole);
+}
 // ******************************** "==" Operator *******************************************
 bool BigReal::operator==(BigReal anotherReal) {
     if(sign!=anotherReal.sign){
