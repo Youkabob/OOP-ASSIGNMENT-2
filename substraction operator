@@ -1,0 +1,88 @@
+// ******************************** Subtraction "-" Operator *******************************************
+BigReal BigReal::operator- (const BigReal& other) {
+    BigReal result;
+
+    if (this->sign != other.sign) {
+        BigReal negOther = other;
+        negOther.sign = (other.sign == '+') ? '-' : '+';
+        result = *this + negOther;
+    } else {
+        if (*this < other) {
+            BigReal temp = other;
+            result = temp - *this;
+            result.sign = (this->sign == '+') ? '-' : '+';
+            return result;
+        }
+
+        string lhs = this->fraction, rhs = other.fraction;
+        matchFractionSize(lhs, rhs);
+
+        int borrow = 0;
+        deque<char> diff;
+        for (int i = lhs.size() - 1; i >= 0; --i) {
+            int lhsDigit = lhs[i] - '0' - borrow;
+            int rhsDigit = rhs[i] - '0';
+            if (lhsDigit < 0) {
+                lhsDigit += 10;
+                borrow = 1;
+            } else {
+                borrow = 0;
+            }
+            int digitDiff = lhsDigit - rhsDigit;
+            if (digitDiff < 0) {
+                digitDiff += 10;
+                borrow = 1;
+            }
+            diff.push_front(digitDiff + '0');
+        }
+
+        for (auto &i : diff) {
+            result.fraction.push_back(i);
+        }
+
+        diff.clear();
+
+        std::string lhsWhole = this->whole, rhsWhole = other.whole;
+        matchwholeSize(lhsWhole, rhsWhole);
+
+        for (int i = lhsWhole.size() - 1; i >= 0; --i) {
+            int lhsDigit = lhsWhole[i] - '0' - borrow;
+            int rhsDigit = rhsWhole[i] - '0';
+            if (lhsDigit < 0) {
+                lhsDigit += 10;
+                borrow = 1;
+            } else {
+                borrow = 0;
+            }
+            int digitDiff = lhsDigit - rhsDigit;
+            if (digitDiff < 0) {
+                digitDiff += 10;
+                borrow = 1;
+            }
+            diff.push_front(digitDiff + '0');
+        }
+
+        for (auto &i : diff) {
+            result.whole.push_back(i);
+        }
+
+        result.removeLeadingZeros();
+        result.Size = result.whole.size() + result.fraction.size();
+        result.point = !result.fraction.empty();
+        result.sign = this->sign;
+    }
+
+    return result;
+}
+
+void BigReal::removeLeadingZeros() {
+    while (!fraction.empty() && fraction.front() == '0') {
+        fraction.erase(fraction.begin());
+    }
+    if (fraction.empty()) {
+        point = false;
+    }
+}
+//------------------------------------header file declaration----------------------------------
+ BigReal operator- (const BigReal& other);
+ void removeLeadingZeros();
