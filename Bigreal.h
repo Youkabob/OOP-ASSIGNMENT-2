@@ -21,12 +21,13 @@ public:
     BigReal &operator=(const BigReal &num);// Assignment operator
 
     BigReal operator+ (BigReal& other);
+    BigReal operator- (const BigReal& other);
     bool operator<(const BigReal& anotherReal)const;
     bool operator>(const BigReal &anotherReal)const;
     bool operator== (BigReal anotherReal);
 
     char getSign() const;
-
+    void removeLeadingZeros();
 
 private:
     string fraction;

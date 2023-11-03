@@ -1,3 +1,12 @@
+/*
+ File: Bigreal.cpp
+ Purpose: this program is doing some operations in a big real integers which that normal data types can't store
+ Author: yousef ehab william - alaa wael mohamed - abdullah tarek mohy eldein
+ Section: s6
+ ID: 20220388  20221025  20220184
+ TA: assignment_2 task_2
+ Date: 3 nov 2023
+*/
 #include <bits/stdc++.h>
 #include "Bigreal.h"
 #include "Bigreal.cpp"
@@ -14,11 +23,14 @@ int main() {
     cin >> s2;
     BigReal num2(s2);
 
-    cout << "num 1 : " << num1 << "\n";
-    cout << "num 2 : " << num2 << "\n";
+    cout << "num1 : " << num1 << "\n";
+    cout << "num2 : " << num2 << "\n";
 
     BigReal num3 = num1 + num2;
-    cout << "num 1 + num 2 = " << num3 << '\n';
+    cout << "num1 + num2 = " << num3 << '\n';
+
+    BigReal num4 = num1 - num2;
+    cout << "num1 - num2 = " << num4 << '\n';
 
     if (num1 == num2)
         cout << "num1 = num2\n";

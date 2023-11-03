@@ -17,7 +17,7 @@ bool BigReal ::isValidReal (string number){
     return 1;
 }
 
-//***************************** default constructor *****************************************************
+//***************************** default constructor **************************************************
 BigReal::BigReal(double realNumber) {
     // Initialize your BigReal object based on the double input
     // You will need to implement this part according to your requirements.
@@ -33,7 +33,7 @@ BigReal::BigReal(double realNumber) {
 
 
 
-//***************************** assign number *********************************************************
+//***************************** assign number ********************************************************
 BigReal ::BigReal(string realNumber) {
     if (isValidReal(realNumber)) {
         whole = setWhole(realNumber);
@@ -130,74 +130,163 @@ BigReal& BigReal::operator=(const BigReal &num) {// Assignment operator
 BigReal BigReal::operator+ ( BigReal& other) {
     BigReal realnum;
     deque<char> result;
+    if (this->sign != other.sign) {
+        // Signs are different, perform subtraction
+        if (*this>other) {
+            BigReal negOther = other;
+            negOther.sign = (other.sign == '+') ? '-' : '+';
+            realnum = *this - negOther;
+        }
+        else{
+            BigReal negOther = *this;
+            negOther.sign = (this->sign == '+') ? '-' : '+';
+            realnum = other - negOther;
+        }
+    }
+    else {
+        // Ensure the fractions have the same size by padding with zeros
+        string lhs = this->fraction, rhs = other.fraction;
+        matchFractionSize(lhs, rhs);
 
-    // Ensure the fractions have the same size by padding with zeros
-    string lhs = this->fraction, rhs = other.fraction;
-    matchFractionSize(lhs, rhs);
+        int carry = 0;
+        for (int i = lhs.size() - 1; i >= 0; --i) {
+            int lhsDigit = lhs[i] - '0';
+            int rhsDigit = rhs[i] - '0';
+            int sum = lhsDigit + rhsDigit + carry;
 
-    int carry = 0;
-    for (int i = lhs.size() - 1; i >= 0; --i) {
-        int lhsDigit = lhs[i] - '0';
-        int rhsDigit = rhs[i] - '0';
-        int sum = lhsDigit + rhsDigit + carry;
+            // Handle carry
+            if (sum > 9) {
+                carry = 1;
+                sum %= 10;
+            } else {
+                carry = 0;
+            }
 
-        // Handle carry
-        if (sum > 9) {
-            carry = 1;
-            sum %= 10;
-        } else {
-            carry = 0;
+            result.push_front(sum + '0');
         }
 
-        result.push_front(sum + '0');
-    }
-
-    // Set the fraction part of the result
-    for (auto &i : result) {
-        realnum.fraction.push_back(i);
-    }
-
-    result.clear();
-
-    // Now, repeat a similar process for the whole parts
-    lhs = this->whole;
-    rhs = other.whole;
-    matchwholeSize(lhs, rhs);
-
-    for (int i = lhs.size() - 1; i >= 0; --i) {
-        int lhsDigit = lhs[i] - '0';
-        int rhsDigit = rhs[i] - '0';
-        int sum = lhsDigit + rhsDigit + carry;
-
-        if (sum > 9) {
-            carry = 1;
-            sum %= 10;
-        } else {
-            carry = 0;
+        // Set the fraction part of the result
+        for (auto &i: result) {
+            realnum.fraction.push_back(i);
         }
 
-        result.push_front(sum + '0');
+        result.clear();
+
+        // Now, repeat a similar process for the whole parts
+        lhs = this->whole;
+        rhs = other.whole;
+        matchwholeSize(lhs, rhs);
+
+        for (int i = lhs.size() - 1; i >= 0; --i) {
+            int lhsDigit = lhs[i] - '0';
+            int rhsDigit = rhs[i] - '0';
+            int sum = lhsDigit + rhsDigit + carry;
+
+            if (sum > 9) {
+                carry = 1;
+                sum %= 10;
+            } else {
+                carry = 0;
+            }
+
+            result.push_front(sum + '0');
+        }
+
+        if (carry) {
+            result.push_front(carry + '0');
+        }
+
+        // Set the whole part of the result
+        for (auto &i: result) {
+            realnum.whole.push_back(i);
+        }
+
+        // Copy other properties
+        realnum.Size = this->Size;
+        realnum.sign = this->sign;
+        realnum.point = this->point;
     }
-
-    if (carry) {
-        result.push_front(carry + '0');
-    }
-
-    // Set the whole part of the result
-    for (auto &i : result) {
-        realnum.whole.push_back(i);
-    }
-
-    // Copy other properties
-    realnum.Size = this->Size;
-    realnum.sign = this->sign;
-    realnum.point = this->point;
-
     return realnum;
 }
 
+// ******************************** Subtraction "-" Operator *******************************************
+BigReal BigReal::operator- (const BigReal& other) {
+    BigReal result;
 
-// ******************************** "<" Operator *******************************************
+    if (this->sign != other.sign) {
+        BigReal negOther = other;
+        negOther.sign = (other.sign == '+') ? '-' : '+';
+        result = *this + negOther;
+    } else {
+        if (*this < other) {
+            BigReal temp = other;
+            result = temp - *this;
+            result.sign = (this->sign == '+') ? '-' : '+';
+            return result;
+        }
+
+        string lhs = this->fraction, rhs = other.fraction;
+        matchFractionSize(lhs, rhs);
+
+        int borrow = 0;
+        deque<char> diff;
+        for (int i = lhs.size() - 1; i >= 0; --i) {
+            int lhsDigit = lhs[i] - '0' - borrow;
+            int rhsDigit = rhs[i] - '0';
+            if (lhsDigit < 0) {
+                lhsDigit += 10;
+                borrow = 1;
+            } else {
+                borrow = 0;
+            }
+            int digitDiff = lhsDigit - rhsDigit;
+            if (digitDiff < 0) {
+                digitDiff += 10;
+                borrow = 1;
+            }
+            diff.push_front(digitDiff + '0');
+        }
+
+        for (auto &i : diff) {
+            result.fraction.push_back(i);
+        }
+
+        diff.clear();
+
+        std::string lhsWhole = this->whole, rhsWhole = other.whole;
+        matchwholeSize(lhsWhole, rhsWhole);
+
+        for (int i = lhsWhole.size() - 1; i >= 0; --i) {
+            int lhsDigit = lhsWhole[i] - '0' - borrow;
+            int rhsDigit = rhsWhole[i] - '0';
+            if (lhsDigit < 0) {
+                lhsDigit += 10;
+                borrow = 1;
+            } else {
+                borrow = 0;
+            }
+            int digitDiff = lhsDigit - rhsDigit;
+            if (digitDiff < 0) {
+                digitDiff += 10;
+                borrow = 1;
+            }
+            diff.push_front(digitDiff + '0');
+        }
+
+        for (auto &i : diff) {
+            result.whole.push_back(i);
+        }
+
+        result.removeLeadingZeros();
+        result.Size = result.whole.size() + result.fraction.size();
+        result.point = !result.fraction.empty();
+        result.sign = this->sign;
+    }
+
+    return result;
+}
+
+// ******************************** "<" Operator ****************************************************
 bool BigReal::operator<(const BigReal& anotherReal)const {
 
     if (this->sign == '-' && anotherReal.sign == '+')
@@ -207,21 +296,28 @@ bool BigReal::operator<(const BigReal& anotherReal)const {
         return false;
 
 
-    string LHSFraction = this->fraction;
-    string RHSFraction = anotherReal.fraction;
-    matchFractionSize(LHSFraction, RHSFraction); // add zeros to the right
+    string LHSwhol = this->whole;
+    string RHSwhole = anotherReal.whole;
+    matchwholeSize(LHSwhol, RHSwhole); // add zeros to the right
 
     if (this->whole == anotherReal.whole) {
+        string LHSfraction = this->fraction;
+        string RHSfraction = anotherReal.fraction;
+        matchFractionSize(LHSfraction, RHSfraction); // add zeros to the right
+
         if (this->sign == '-')
-            return (LHSFraction > RHSFraction);
+            return (LHSfraction > RHSfraction);
         else
-            return (LHSFraction < RHSFraction);
+            return (LHSfraction < RHSfraction);
     } else {
-        return (this->whole < anotherReal.whole);
+        if (this->sign == '-')
+        return (this->whole > anotherReal.whole);
+        else   return (this->whole < anotherReal.whole);
+
     }
 }
 
-// ******************************** ">" Operator *******************************************
+// ******************************** ">" Operator ****************************************************
 bool BigReal::operator>(const BigReal &anotherReal)const{
     if(this->sign=='-'&&anotherReal.sign=='+')
         return false;
@@ -229,20 +325,29 @@ bool BigReal::operator>(const BigReal &anotherReal)const{
     if(this->sign=='+'&&anotherReal.sign=='-')
         return true;
 
-    string LHSFraction = this->fraction;
-    string RHSFraction = anotherReal.fraction;
-    matchFractionSize(LHSFraction,RHSFraction);
 
-    if(this->whole==anotherReal.whole){
-        if(this->sign=='-')
-            return (LHSFraction < RHSFraction);
+    string LHSwhol = this->whole;
+    string RHSwhole = anotherReal.whole;
+    matchwholeSize(LHSwhol, RHSwhole); // add zeros to the right
+
+    if (this->whole == anotherReal.whole) {
+        string LHSfraction = this->fraction;
+        string RHSfraction = anotherReal.fraction;
+        matchFractionSize(LHSfraction, RHSfraction); // add zeros to the right
+
+        if (this->sign == '-')
+            return (LHSfraction < RHSfraction);
         else
-            return (LHSFraction > RHSFraction);
+            return (LHSfraction > RHSfraction);
+    } else {
+        if (this->sign == '-')
+            return (this->whole < anotherReal.whole);
+        else   return (this->whole > anotherReal.whole);
+
     }
-    else
-        return (this->whole>anotherReal.whole);
 }
-// ******************************** "==" Operator *******************************************
+
+// ******************************** "==" Operator ***************************************************
 bool BigReal::operator==(BigReal anotherReal) {
     if(sign!=anotherReal.sign){
         return false;
@@ -293,6 +398,14 @@ void BigReal::matchFractionSize(string &lhs, string &rhs){
     }
 }
 
+void BigReal::removeLeadingZeros() {
+    while (!fraction.empty() && fraction.front() == '0') {
+        fraction.erase(fraction.begin());
+    }
+    if (fraction.empty()) {
+        point = false;
+    }
+}
 
 
 ostream& operator<<(ostream &out, BigReal num) {
