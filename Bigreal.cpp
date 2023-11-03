@@ -209,6 +209,7 @@ BigReal BigReal::operator+ ( BigReal& other) {
     return realnum;
 }
 
+
 // ******************************** Subtraction "-" Operator *******************************************
 BigReal BigReal::operator- (const BigReal& other) {
     BigReal result;
