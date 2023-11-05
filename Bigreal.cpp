@@ -209,20 +209,10 @@ BigReal BigReal::operator+ ( BigReal& other) {
     return realnum;
 }
 
-
 // ******************************** Subtraction "-" Operator *******************************************
 BigReal BigReal::operator- (const BigReal& other) {
     BigReal result;
-    if(this->sign==other.sign) {
-    if (this->whole == other.whole) {
-        if(this->fraction==other.fraction){
-            result.sign=' ';
-            result.whole="0";
-            result.fraction='0';
-            return result;
-        }
-    }
-}
+
     if (this->sign != other.sign) {
         BigReal negOther = other;
         negOther.sign = (other.sign == '+') ? '-' : '+';
