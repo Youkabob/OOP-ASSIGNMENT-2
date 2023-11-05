@@ -1,0 +1,1 @@
+program compairs thr content of two different files
