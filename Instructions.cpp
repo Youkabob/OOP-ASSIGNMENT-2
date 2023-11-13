@@ -5,10 +5,10 @@ using namespace std;
 string Instructions::changeAddress(const string &address, int x) {
     int Address= stoi(address, nullptr,16);
     stringstream ss;
-    ss << hex << Address + x;
+    ss << hex << Address + x;//converts to integer then adds "x" then converts to hex then to string
     string s = ss.str();
     if (s.size() == 1)
-        s = "0" + s;
+        s = "0" + s;//if s="6" for example we will store it "06"
     return s;
 }
 void Instructions::loadregister(string &address, string value) {
@@ -31,11 +31,27 @@ void Instructions::excute(std::string &instruction, Memory &memory, string &addr
         first_op(instruction,memory);
         address= changeAddress(address,2);
     }
-    if(op=='2'){}
-    if(op=='3'){}
-    if(op=='4'){}
-    if(op=='5'){}
-    if(op=='B'||op=='b'){}
+    if(op=='2'){
+        second_op(instruction);
+        address= changeAddress(address,2);
+    }
+    if(op=='3'){
+
+    }
+    if(op=='4'){
+        fourth_op(instruction);
+        address= changeAddress(address,2);
+    }
+    if(op=='5'){
+        fifth_op(instruction);
+        address= changeAddress(address,2);
+    }
+    if(op=='B'||op=='b'){
+        if(jump_op(instruction) == "")
+            address = changeAddress(address, 2);
+        else
+            address = jump_op(instruction);
+    }
 }
 void Instructions::start(string &counter, Memory &memory) {
 string address=counter;
@@ -55,4 +71,46 @@ void Instructions::first_op(std::string &instruction, Memory &memory) {
     string value = memory.getslot(memoryIndex);
     //he gets the value inside the memory slot and stores it in the register
     loadregister(registerIndex, value);
+}
+void Instructions::second_op(std::string &instruction) {
+    string value = instruction.substr(2,2);
+    string registerIndex = instruction.substr(1,1);
+    loadregister(registerIndex,value);
+}
+void Instructions::fourth_op(string &instruction) {
+    string reg1Index = instruction.substr(2,1);
+    string reg2Index = instruction.substr(3,1);
+    loadregister(reg2Index, getregister(reg1Index));
+}
+void Instructions::fifth_op(string &instruction) {
+
+    string reg1 = instruction.substr(2,1);
+    string reg2 = instruction.substr(3,1);
+    string target_register = instruction.substr(1,1);
+
+    string num1 = getregister(reg1);
+    string num2 = getregister(reg2);
+
+    int n1 = stoi(num1, nullptr, 16);
+    int n2 = stoi(num2, nullptr, 16);
+
+    int sum = n1 + n2;
+
+    stringstream result;
+    result << hex << sum;
+    string res = result.str();
+    if(res.size() == 1)
+        res = "0" + res;
+    loadregister(target_register,res);
+}
+string Instructions::jump_op(std::string &instruction) {
+
+    string reg1 = instruction.substr(1, 1);
+    string reg0 = registers[0];
+
+    if (getregister(reg1) == reg0) {
+        string target_address = instruction.substr(2, 2);
+        return target_address;
+    } else return "";
+
 }
