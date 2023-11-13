@@ -1,5 +1,6 @@
 #include "bits/stdc++.h"
 #include "Memory.h"
+
 using namespace std;
 
 #ifndef MACHINE_SIMULATOR_YOUKA_INSTRUCTIONS_H
@@ -23,6 +24,8 @@ public:
     void first_op(string &instruction,Memory &memory);
 
     void second_op(string &instruction);
+
+    void third_op(string &instruction,Memory &memory);
 
     void fourth_op(string &instruction);
 
