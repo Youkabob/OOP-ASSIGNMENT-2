@@ -1,5 +1,7 @@
 #include "bits/stdc++.h"
 #include "Instructions.h"
+#include "Memory.h"
+#include "Machine.h"
 #define isOn(n,k) (((n) >> (k)) & 1)
 using namespace std;
 string Instructions::changeAddress(const string &address, int x) {
@@ -36,7 +38,8 @@ void Instructions::excute(std::string &instruction, Memory &memory, string &addr
         address= changeAddress(address,2);
     }
     if(op=='3'){
-
+        third_op(instruction,memory);
+        address= changeAddress(address,2);
     }
     if(op=='4'){
         fourth_op(instruction);
@@ -113,4 +116,15 @@ string Instructions::jump_op(std::string &instruction) {
         return target_address;
     } else return "";
 
+}
+void Instructions::third_op(string &instruction,Memory &memory) {
+    string address= instruction.substr(2,2);
+    string reg=instruction.substr(1,1);
+    if(address=="00"){
+        cout<<getregister(reg);
+    }
+    else{
+    string value= getregister(reg);
+    memory.setslot(address,value);
+    }
 }
