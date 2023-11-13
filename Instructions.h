@@ -19,6 +19,15 @@ public:
     void excute(string &instruction,Memory &memory,string &address);
 
     void start(string &counter, Memory &memory);
+
     void first_op(string &instruction,Memory &memory);
+
+    void second_op(string &instruction);
+
+    void fourth_op(string &instruction);
+
+    void fifth_op(string &instruction);
+
+    string jump_op(string &instruction);
 };
 #endif //MACHINE_SIMULATOR_YOUKA_INSTRUCTIONS_H
