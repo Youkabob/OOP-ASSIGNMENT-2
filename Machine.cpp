@@ -20,7 +20,7 @@ void Machine::loadprog() {
     while (!file.eof()) {
         string address, value;
         file >> address >> value;
-        address = address.substr(0,2);
+        address = address.substr(2,2);
         value = value.substr(2,2);
         memory.setslot(address,value);
     }
