@@ -16,6 +16,8 @@ public:
     void loadprog();
 
     void run();
+    void displaystatus();
 };
 #endif //MACHINE_SIMULATOR_YOUKA_MACHINE_H
+
 
