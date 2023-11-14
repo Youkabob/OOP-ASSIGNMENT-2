@@ -18,3 +18,4 @@ public:
     void run();
 };
 #endif //MACHINE_SIMULATOR_YOUKA_MACHINE_H
+
