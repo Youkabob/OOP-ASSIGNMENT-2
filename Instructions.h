@@ -11,6 +11,9 @@ private:
 private:
  string changeAddress(const string&address,int x);
 public:
+    Instructions(){
+        fill(registers,registers+16,"00");
+    }
     void loadregister(string  &address,string value);
 
     string getregister(string  &address);
@@ -32,5 +35,7 @@ public:
     void fifth_op(string &instruction);
 
     string jump_op(string &instruction);
+
+    void displayregister();
 };
 #endif //MACHINE_SIMULATOR_YOUKA_INSTRUCTIONS_H
