@@ -7,9 +7,9 @@ class Memory{
 private:
     string slots[256];
 public:
-string getslot(string& address);
+    string getslot(string &address);
 
-void setslot(string& address,string value);
+    void setslot(string &address,string value);
 
 };
 #endif //MACHINE_SIMULATOR_YOUKA_MEMORY_H
