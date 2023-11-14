@@ -27,3 +27,9 @@ void Machine::loadprog() {
         memory.setslot(address,value);
     }
 }
+void Machine::displaystatus() {
+    cout<<"The following list contains the 16 register: "<<endl;
+    ins.displayregister();
+    cout<<"the following list includes the 256 memory slots: "<<endl;
+    memory.displaymemory();
+}
