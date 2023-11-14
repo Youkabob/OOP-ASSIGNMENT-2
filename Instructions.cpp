@@ -2,7 +2,7 @@
 #include "Instructions.h"
 #include "Memory.h"
 #include "Machine.h"
-#define isOn(n,k) (((n) >> (k)) & 1)
+
 using namespace std;
 string Instructions::changeAddress(const string &address, int x) {
     int Address= stoi(address, nullptr,16);
@@ -121,10 +121,18 @@ void Instructions::third_op(string &instruction,Memory &memory) {
     string address= instruction.substr(2,2);
     string reg=instruction.substr(1,1);
     if(address=="00"){
-        cout<<getregister(reg);
+        cout<<getregister(reg)<<endl;
     }
     else{
     string value= getregister(reg);
     memory.setslot(address,value);
+    }
+}
+void Instructions::displayregister() {
+    for (int i = 0; i < 16; i++) {
+        stringstream ss;
+        ss<<hex<<i;
+        string hex=ss.str();
+        cout<<"Register "<<hex<<" = "<<registers[i]<<endl;
     }
 }
