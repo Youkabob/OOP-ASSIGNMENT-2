@@ -21,7 +21,9 @@ void Machine::loadprog() {
         string address, value;
         file >> address >> value;
         address = address.substr(2,2);
+        //0x11 0x22 it takes the "11"
         value = value.substr(2,2);
+        //it takes "22"
         memory.setslot(address,value);
     }
 }
