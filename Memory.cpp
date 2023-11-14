@@ -9,3 +9,4 @@ string Memory::getslot(std::string &address) {
  int idx=stoi(address, nullptr,16);
  return slots[idx];
 }
+
